@@ -1,6 +1,9 @@
 package RaspBusMVP.View
 
+import RaspBusMVP.Presenter.StopPresenter
+import RaspBusMVP.Presenter.adapterStop
 import RaspBusMVP.StopAdapter
+import RaspBusMVP.View.TimeActivity.Companion.title1
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -22,122 +25,59 @@ import java.util.*
 import android.view.View
 
 
-
-private val listRoute = mutableListOf<Stop>()
-private lateinit var adapter: StopAdapter
-
-private var Url = arrayOf("http://ap2polotsk.of.by/ap2/rasp/gorod/m-1/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-2/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-2a/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-3/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-4/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-4a/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-6/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-7/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-8/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-9/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-11/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-13/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-23/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-24/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-26/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-27/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-28-00/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-28/")
-private var TitleBlet = ""
+private var TitleStop= ""
 
 class StopActivity : AppCompatActivity() {
 
     companion object {
-
         const val pos = "total_count"
-        const val title1 = "title"
+        const val PrevTitle = "title"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.toxa.raspbusv2.R.layout.activity_stop)
-        title = intent.getStringExtra(title1)
-        TitleBlet = intent.getStringExtra(title1)
+        title = intent.getStringExtra(PrevTitle) // получаем наименование маршрута и устанавливает в качестве заголовка
+        TitleStop = intent.getStringExtra(PrevTitle) // получаем наименование маршрута
         val filter = IntentFilter()
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
-        registerReceiver(NetworkChangeReceiver(), filter)
-        val actionBar = supportActionBar
+        registerReceiver(NetworkChangeReceiver(), filter) //регистрация класса проверки состояния сети
+        val actionBar = supportActionBar // добавляем кнопку "Назад"
         actionBar!!.setHomeButtonEnabled(true)
         actionBar.setDisplayHomeAsUpEnabled(true)
             }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean { // обработка нажатия кнопки "Назад"
         this.finish()
         return true
     }
 
-    private fun isOnline(): Boolean {
-        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val netInfo = cm.activeNetworkInfo
-        return netInfo != null && netInfo.isConnectedOrConnecting
-    }
+//    private fun isOnline(): Boolean {
+//        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//        val netInfo = cm.activeNetworkInfo
+//        return netInfo != null && netInfo.isConnectedOrConnecting
+//    }
 
 
-    @SuppressLint("StaticFieldLeak")
-    inner class MyTask : AsyncTask<Void, Void, MutableList<Stop>>() {
 
-        override fun doInBackground(vararg params: Void): MutableList<Stop> {
-            val doc: Document
-            var tb = 0
-            val yourDate = Calendar.getInstance().time
-            val c = Calendar.getInstance()
-            c.time = yourDate
-            val dayOfWeek = c[Calendar.DAY_OF_WEEK]
-            if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
-                tb = 1
-            }
-            val count = intent.getIntExtra(pos,0)
-            try {
-                doc = Jsoup.connect(Url[count]).get()
-                val table = doc.select("table")[tb]
-                val rows = table.select("tr")
-                var j = 0
-                if (count==3){j=3}
-                else {j = rows.size}
-                for (i in 1 until j) {
-                    val row = rows[i] //по номеру индекса получает строку
-                    val cols = row.select("td")// разбиваем полученную строку по тегу  на столбы
-                    val str1 = cols[0].text()
-                    if (str1=="—"){}else
-                    listRoute.add(Stop(str1))
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-            return listRoute
-        }
-
-
-        override fun onPostExecute(result: MutableList<Stop>) {
-            //if you had a ui element, you could display the title
-            adapter.set(result)
-            if (result.size==0){
-                eror.visibility = View.VISIBLE}
-            if (result.size==0 && !isOnline()){
-                eror.visibility = View.GONE}
-            progres.visibility = View.GONE
-        }
-    }
     inner class NetworkChangeReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
-                if (isOnline(context)) {
-                    title = TitleBlet
-                    MyTask().execute()
-                    adapter = StopAdapter()
+                if (isOnline(context)) { // если есть интернет соединение
+                    title = TitleStop
+                    StopPresenter().execute()
+                    adapterStop = StopAdapter()
                     Stop_List.layoutManager = LinearLayoutManager(context)
-                    Stop_List.adapter = adapter
-                    listRoute.clear()
-                    Log.e("keshav", "Online Connect Intenet ")
+                    Stop_List.adapter = adapterStop
+                    progres.visibility = View.GONE
+                    if (adapterStop.itemCount==0){ // если выходной день и список пустой
+                        eror.visibility = View.VISIBLE}
+                    if (adapterStop.itemCount==0 && !isOnline(context)){
+                        eror.visibility = View.GONE}
+                    Log.e("Check", "Online Connect Internet ")
                 } else {
                     title = "Ожидание сети..."
-                    Log.e("keshav", "Conectivity Failure !!! ")
+                    Log.e("Check", "No Online Connect !!! ")
                 }
             } catch (e: NullPointerException) {
                 e.printStackTrace()

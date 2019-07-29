@@ -14,9 +14,11 @@ import com.toxa.raspbusv2.R
 
 @SuppressLint("StaticFieldLeak")
 private var context: Context? = null
-private var lastPosition = -1
 
 class StopAdapter: RecyclerView.Adapter<StopView>(){
+    companion object{
+        var pos = 0
+    }
     private val listStop = mutableListOf<Stop>()
 
     override fun onBindViewHolder(holder: StopView, position: Int) {
@@ -27,6 +29,7 @@ class StopAdapter: RecyclerView.Adapter<StopView>(){
             intent.putExtra(TimeActivity.pos, holder.adapterPosition)
             intent.putExtra(TimeActivity.pos2, route_Adapter.pos)
             intent.putExtra(TimeActivity.title1, holder.itemView.name_stop.text.toString())
+            pos = position
             it.context.startActivity(intent)
         }
     }

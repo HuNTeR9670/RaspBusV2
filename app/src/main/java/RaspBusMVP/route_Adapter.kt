@@ -22,12 +22,12 @@ class route_Adapter: RecyclerView.Adapter<routeHolder>() {
     }
 
     override fun onBindViewHolder(holder: routeHolder, position: Int) {
-        holder.bind( listRoute[position])
+        holder.bind(listRoute[position])
         holder.itemView.card_view.setOnClickListener{
             context = it.context
             val intent = Intent(context, StopActivity::class.java)
             intent.putExtra(StopActivity.pos, holder.adapterPosition)
-            intent.putExtra(StopActivity.title1, holder.itemView.Route_Name.text)
+            intent.putExtra(StopActivity.PrevTitle, holder.itemView.Route_Name.text)
             pos =position
             it.context.startActivity(intent)
         }
