@@ -23,12 +23,6 @@ val array = arrayOf("АВТОВОКЗАЛ-СЕЛЬХОЗТЕХНИКА","БОЛ�
 
 class MainPresenter : AsyncTask<Void, Void, MutableList<Route>>() { // поток парсинга страницы и получения данных в адаптер
 
-//       override fun onPreExecute() {
-//           if (!isOnline()){ // если сети нет изменить загаловок
-//               title="Ожидание сети.."
-//           }
-//           super.onPreExecute()
-//       }
 
     override fun doInBackground(vararg params: Void): MutableList<Route> {
         val doc: Document

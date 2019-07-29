@@ -25,9 +25,7 @@ class StopAdapter: RecyclerView.Adapter<StopView>(){
         holder.itemView.card_view.setOnClickListener{
             context = it.context
             val intent = Intent(context, TimeActivity::class.java)
-            intent.putExtra(TimeActivity.pos, holder.adapterPosition)
-            intent.putExtra(TimeActivity.pos2, route_Adapter.pos)
-            intent.putExtra(TimeActivity.title1, holder.itemView.name_stop.text.toString())
+            intent.putExtra(TimeActivity.TitleStop, holder.itemView.name_stop.text.toString())
             pos = position
             it.context.startActivity(intent)
         }

@@ -13,21 +13,10 @@
                  android:layout_marginLeft="160dp" android:layout_marginStart="160dp"
                  app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
                  app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.0"
-                 android:id="@+id/progres" tools:visibility="visible" android:visibility="visible"/>
+                 android:id="@+id/pro" tools:visibility="visible" android:visibility="visible"/>
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="390dp"
             android:layout_height="wrap_content" tools:layout_editor_absoluteY="4dp" tools:layout_editor_absoluteX="8dp"
             tools:ignore="MissingConstraints" android:id="@+id/Stop_List" android:clickable="false"
             android:focusable="true" tools:listitem="@layout/stop_item"/>
-    <TextView
-            android:text="Выходной день!"
-            android:layout_width="179dp"
-            android:layout_height="40dp"
-            android:id="@+id/eror"
-            tools:ignore="MissingConstraints" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent" android:gravity="center"
-            android:visibility="gone" tools:visibility="gone"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

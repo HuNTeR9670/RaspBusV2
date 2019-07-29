@@ -1,13 +1,11 @@
 package com.toxa.RaspBusMVP.View
 
 import com.toxa.RaspBusMVP.TimeAdapter
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
-import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -17,26 +15,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.toxa.RaspBusMVP.Presenter.TimePresenter
 import com.toxa.RaspBusMVP.Presenter.adapterTime
 import com.toxa.RaspBusMVP.R
-import com.toxa.RaspBusMVP.model.Time
 import kotlinx.android.synthetic.main.activity_time.*
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import java.io.IOException
-import java.util.*
 
 
-
-
-private var TitleBlet = ""
+private var TitleTime = ""
 
 
 class TimeActivity : AppCompatActivity() {
 
     companion object {
-
-        const val pos = "posl"
-        const val pos2 = "pos2"
-        const val title1 = "title"
+        const val TitleStop = "title"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,8 +36,8 @@ class TimeActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.setHomeButtonEnabled(true)
         actionBar.setDisplayHomeAsUpEnabled(true)
-        title = intent.getStringExtra(title1)
-        TitleBlet = intent.getStringExtra(title1)
+        title = intent.getStringExtra(TitleStop)
+        TitleTime = intent.getStringExtra(TitleStop)
 
     }
 
@@ -62,12 +50,12 @@ class TimeActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
                 if (isOnline(context)) {
-                    title = TitleBlet
+                    title = TitleTime
                     adapterTime = TimeAdapter()
                     TimeList.layoutManager = LinearLayoutManager(context)
                     TimeList.adapter = adapterTime
                     TimePresenter().execute()
-                    progres.visibility = View.GONE
+                    pro.visibility = View.GONE
                     Log.e("Internet Access", "Online Connect Intenet ")
                 } else {
                     title = "Ожидание сети..."

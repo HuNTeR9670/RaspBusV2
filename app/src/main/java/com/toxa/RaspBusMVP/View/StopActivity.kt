@@ -1,5 +1,6 @@
 package com.toxa.RaspBusMVP.View
 
+import android.annotation.SuppressLint
 import com.toxa.RaspBusMVP.Presenter.StopPresenter
 import com.toxa.RaspBusMVP.Presenter.adapterStop
 import com.toxa.RaspBusMVP.StopAdapter
@@ -16,6 +17,7 @@ import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_stop.*
 import android.view.View
+import android.widget.Toast
 import com.toxa.RaspBusMVP.Presenter.listStop
 import com.toxa.RaspBusMVP.R
 
@@ -47,12 +49,6 @@ class StopActivity : AppCompatActivity() {
         return true
     }
 
-//    private fun isOnline(): Boolean {
-//        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-//        val netInfo = cm.activeNetworkInfo
-//        return netInfo != null && netInfo.isConnectedOrConnecting
-//    }
-
 
 
     inner class NetworkChangeReceiver : BroadcastReceiver() {
@@ -64,11 +60,7 @@ class StopActivity : AppCompatActivity() {
                     adapterStop = StopAdapter()
                     Stop_List.layoutManager = LinearLayoutManager(context)
                     Stop_List.adapter = adapterStop
-                    progres.visibility = View.GONE //убираем прогресс бар
-//                    if (listStop.size==0){
-//                        eror.visibility = View.VISIBLE}
-//                    if (listStop.size!=0 && isOnline(context)){
-//                        eror.visibility = View.GONE}
+                    pro.visibility = View.GONE //убираем прогресс бар
                     Log.e("Check", "Online Connect Internet ")
                 } else {
                     title = "Ожидание сети..."

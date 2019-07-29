@@ -11,7 +11,6 @@ import android.util.Log
 import android.content.IntentFilter
 import android.content.Intent
 import android.content.BroadcastReceiver
-import android.os.AsyncTask
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.toxa.RaspBusMVP.R
@@ -19,9 +18,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
-//    companion object {
-//        var pos= 0
-//    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -29,14 +25,6 @@ class MainActivity : AppCompatActivity() {
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
         registerReceiver(NetworkChangeReceiver(), filter) //регистрация класса проверки состояния сети
     }
-
-
-//    fun isOnline(): Boolean { //метод проверки состояния сети для изменения загаловка
-//        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-//        val netInfo = cm.activeNetworkInfo
-//        ConnectivityManager.CONNECTIVITY_ACTION
-//        return netInfo != null && netInfo.isConnectedOrConnecting
-//    }
 
     inner class NetworkChangeReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -47,7 +35,7 @@ class MainActivity : AppCompatActivity() {
                     adapterRoute = route_Adapter() // установка адаптера списка
                     Route_list.layoutManager = LinearLayoutManager(context)
                     Route_list.adapter = adapterRoute // передача адаптера списка
-                    progres.visibility = View.GONE // убираем прогресс бар
+                    pro.visibility = View.GONE // убираем прогресс бар
                     Log.e("Check", "Online Connect Internet ")  // пишем в логи присутсвие интернета
                 } else { // если нет интернет соединения
                     title = "Ожидание сети..." // изменить заголовок

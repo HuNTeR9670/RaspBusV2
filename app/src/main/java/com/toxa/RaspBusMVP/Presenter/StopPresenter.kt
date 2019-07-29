@@ -53,13 +53,16 @@ class StopPresenter : AsyncTask<Void, Void, MutableList<Stop>>() { // поток
             val table = doc.select("table")[flag] // получаем таблицу в случае если выходной то таблица №2
             val rows = table.select("tr") // получаем строки таблицы
             val j: Int
-            if (pos==3 && flag!=1){j=3}
-            else {j = rows.size}
+            j = if (pos==3 && flag!=1){
+                3
+            } else {
+                rows.size
+            }
             for (i in 1 until j) {
                 val row = rows[i] //по номеру индекса получает строку
                 val cols = row.select("td")// разбиваем полученную строку по тегу  на столбы
                 val str1 = cols[0].text()  // получаем названия остановок
-                if (str1=="—"){}else // если таблица не имеет ничего
+                if (str1=="—"){}else // если таблица не имеет ничего добавляем "Выходной день!"
                     listStop.add(Stop(str1))
             }
         } catch (e: IOException) {
