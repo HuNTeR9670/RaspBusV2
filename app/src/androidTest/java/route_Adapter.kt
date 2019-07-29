@@ -1,18 +1,9 @@
-package com.toxa.raspbus.View
-
-import View.routeHolder
 import android.content.Context
 import android.content.Intent
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
-import com.toxa.raspbus.model.Stop
-import com.toxa.raspbus.model.Time
-import com.toxa.raspbusv2.Activity.activity.Activity.StopActivity
+import View.StopActivity
 import com.toxa.raspbusv2.R
 import kotlinx.android.synthetic.main.route_item.view.*
 import model.Route

@@ -1,35 +1,22 @@
-package com.toxa.raspbusv2.Activity.activity.Activity
+package View
 
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View.GONE
-import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.toxa.raspbus.View.route_Adapter
+import route_Adapter
 import kotlinx.android.synthetic.main.activity_main.*
 import model.Route
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.io.IOException
-import android.net.NetworkInfo
-import android.content.Context.CONNECTIVITY_SERVICE
-import androidx.core.content.ContextCompat.getSystemService
 import android.net.ConnectivityManager
 import android.content.Context
 import android.util.Log
-import android.view.View
-import java.net.HttpURLConnection.HTTP_OK
-import androidx.core.content.ContextCompat.getSystemService
-import android.net.sip.SipErrorCode.TIME_OUT
-import java.net.*
-import android.R
 import android.content.IntentFilter
 import android.content.Intent
 import android.content.BroadcastReceiver
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.os.Build
 
 
 private val listRoute = mutableListOf<Route>()

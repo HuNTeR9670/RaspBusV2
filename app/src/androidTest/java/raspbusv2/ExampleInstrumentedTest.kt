@@ -1,4 +1,4 @@
-package com.toxa.raspbusv2
+package raspbusv2
 
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4

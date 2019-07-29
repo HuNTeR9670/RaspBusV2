@@ -1,5 +1,3 @@
-package com.toxa.raspbus.View
-
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.toxa.raspbus.model.Time

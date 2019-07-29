@@ -1,5 +1,3 @@
-package com.toxa.raspbus.View
-
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

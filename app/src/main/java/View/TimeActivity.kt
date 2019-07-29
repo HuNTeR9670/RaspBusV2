@@ -1,4 +1,4 @@
-package com.toxa.raspbusv2.Activity.activity.Activity
+package View
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
@@ -11,20 +11,20 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.toxa.raspbus.View.StopAdapter
-import com.toxa.raspbus.model.Stop
-import kotlinx.android.synthetic.main.activity_stop.*
+import TimeAdapter
+import com.toxa.raspbus.model.Time
+import com.toxa.raspbusv2.R
+import kotlinx.android.synthetic.main.activity_time.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.io.IOException
 import java.util.*
-import android.view.View
 
 
-
-private val listRoute = mutableListOf<Stop>()
-private lateinit var adapter: StopAdapter
+private val listTime = mutableListOf<Time>()
+private lateinit var adapter: TimeAdapter
 
 private var Url = arrayOf("http://ap2polotsk.of.by/ap2/rasp/gorod/m-1/",
     "http://ap2polotsk.of.by/ap2/rasp/gorod/m-2/",
@@ -44,83 +44,77 @@ private var Url = arrayOf("http://ap2polotsk.of.by/ap2/rasp/gorod/m-1/",
     "http://ap2polotsk.of.by/ap2/rasp/gorod/m-27/",
     "http://ap2polotsk.of.by/ap2/rasp/gorod/m-28-00/",
     "http://ap2polotsk.of.by/ap2/rasp/gorod/m-28/")
+
 private var TitleBlet = ""
 
-class StopActivity : AppCompatActivity() {
+
+class TimeActivity : AppCompatActivity() {
 
     companion object {
 
-        const val pos = "total_count"
+        const val pos = "posl"
+        const val pos2 = "pos2"
         const val title1 = "title"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.toxa.raspbusv2.R.layout.activity_stop)
-        title = intent.getStringExtra(title1)
-        TitleBlet = intent.getStringExtra(title1)
+        setContentView(R.layout.activity_time)
         val filter = IntentFilter()
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
         registerReceiver(NetworkChangeReceiver(), filter)
         val actionBar = supportActionBar
         actionBar!!.setHomeButtonEnabled(true)
         actionBar.setDisplayHomeAsUpEnabled(true)
-            }
+        title = intent.getStringExtra(View.TimeActivity.Companion.title1)
+        View.TitleBlet = intent.getStringExtra(View.TimeActivity.Companion.title1)
+
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         this.finish()
         return true
     }
 
-    private fun isOnline(): Boolean {
-        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val netInfo = cm.activeNetworkInfo
-        return netInfo != null && netInfo.isConnectedOrConnecting
-    }
-
-
     @SuppressLint("StaticFieldLeak")
-    inner class MyTask : AsyncTask<Void, Void, MutableList<Stop>>() {
+    inner class MyTask : AsyncTask<Void, Void, MutableList<Time>>() {
 
-        override fun doInBackground(vararg params: Void): MutableList<Stop> {
+        override fun doInBackground(vararg params: Void): MutableList<Time> {
             val doc: Document
             var tb = 0
             val yourDate = Calendar.getInstance().time
             val c = Calendar.getInstance()
             c.time = yourDate
+
             val dayOfWeek = c[Calendar.DAY_OF_WEEK]
             if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
                 tb = 1
             }
-            val count = intent.getIntExtra(pos,0)
+            val count = intent.getIntExtra(View.TimeActivity.Companion.pos,0)
+            val count1 = intent.getIntExtra(View.TimeActivity.Companion.pos2,0)
             try {
-                doc = Jsoup.connect(Url[count]).get()
+                doc = Jsoup.connect(View.Url[count1]).get()
                 val table = doc.select("table")[tb]
                 val rows = table.select("tr")
-                var j = 0
-                if (count==3){j=3}
-                else {j = rows.size}
-                for (i in 1 until j) {
-                    val row = rows[i] //по номеру индекса получает строку
+                    val row = rows[count+1] //по номеру индекса получает строку
                     val cols = row.select("td")// разбиваем полученную строку по тегу  на столбы
-                    val str1 = cols[0].text()
-                    if (str1=="—"){}else
-                    listRoute.add(Stop(str1))
-                }
+                    val str1 = cols[1].text()
+                    val Time_List = str1.split("|")
+                    for (i in 0 until Time_List.size){
+                        val str2 = Time_List[i]
+                        View.listTime.add(Time(str2))
+                    }
+
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-            return listRoute
+            return View.listTime
         }
 
 
-        override fun onPostExecute(result: MutableList<Stop>) {
+        override fun onPostExecute(result: MutableList<Time>) {
             //if you had a ui element, you could display the title
-            adapter.set(result)
-            if (result.size==0){
-                eror.visibility = View.VISIBLE}
-            if (result.size==0 && !isOnline()){
-                eror.visibility = View.GONE}
+            View.adapter.set(result)
             progres.visibility = View.GONE
         }
     }
@@ -128,16 +122,16 @@ class StopActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
                 if (isOnline(context)) {
-                    title = TitleBlet
+                    title = View.TitleBlet
+                    View.adapter = TimeAdapter()
+                    TimeList.layoutManager = LinearLayoutManager(context)
+                    TimeList.adapter = View.adapter
+                    View.listTime.clear()
                     MyTask().execute()
-                    adapter = StopAdapter()
-                    Stop_List.layoutManager = LinearLayoutManager(context)
-                    Stop_List.adapter = adapter
-                    listRoute.clear()
-                    Log.e("keshav", "Online Connect Intenet ")
+                    Log.e("Internet Access", "Online Connect Intenet ")
                 } else {
                     title = "Ожидание сети..."
-                    Log.e("keshav", "Conectivity Failure !!! ")
+                    Log.e("Internet Access", "Conectivity Failure !!! ")
                 }
             } catch (e: NullPointerException) {
                 e.printStackTrace()
@@ -158,5 +152,5 @@ class StopActivity : AppCompatActivity() {
 
         }
     }
-}
 
+}
