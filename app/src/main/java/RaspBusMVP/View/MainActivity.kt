@@ -1,13 +1,13 @@
-package View
+package RaspBusMVP.View
 
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View.GONE
 import androidx.recyclerview.widget.LinearLayoutManager
-import route_Adapter
 import kotlinx.android.synthetic.main.activity_main.*
-import model.Route
+import RaspBusMVP.model.Route
+import RaspBusMVP.route_Adapter
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.io.IOException
@@ -68,7 +68,12 @@ class MainActivity : AppCompatActivity() {
                 doc = Jsoup.connect("http://ap2polotsk.of.by/ap2/rasp/gorod/").get()
                 val pngs = doc.select("img[src$=.png]")
                 for (i in 0 until pngs.size ){
-                    listRoute.add(Route(array[i],pngs.eq(i).attr("src")))
+                    listRoute.add(
+                        Route(
+                            array[i],
+                            pngs.eq(i).attr("src")
+                        )
+                    )
                 }
 
             } catch (e: IOException) {

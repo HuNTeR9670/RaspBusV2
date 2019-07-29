@@ -1,5 +1,6 @@
-package View
+package RaspBusMVP.View
 
+import RaspBusMVP.TimeAdapter
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -13,7 +14,6 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import TimeAdapter
 import com.toxa.raspbus.model.Time
 import com.toxa.raspbusv2.R
 import kotlinx.android.synthetic.main.activity_time.*
@@ -66,8 +66,8 @@ class TimeActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.setHomeButtonEnabled(true)
         actionBar.setDisplayHomeAsUpEnabled(true)
-        title = intent.getStringExtra(View.TimeActivity.Companion.title1)
-        View.TitleBlet = intent.getStringExtra(View.TimeActivity.Companion.title1)
+        title = intent.getStringExtra(title1)
+        TitleBlet = intent.getStringExtra(title1)
 
     }
 
@@ -90,10 +90,10 @@ class TimeActivity : AppCompatActivity() {
             if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
                 tb = 1
             }
-            val count = intent.getIntExtra(View.TimeActivity.Companion.pos,0)
-            val count1 = intent.getIntExtra(View.TimeActivity.Companion.pos2,0)
+            val count = intent.getIntExtra(pos,0)
+            val count1 = intent.getIntExtra(pos2,0)
             try {
-                doc = Jsoup.connect(View.Url[count1]).get()
+                doc = Jsoup.connect(Url[count1]).get()
                 val table = doc.select("table")[tb]
                 val rows = table.select("tr")
                     val row = rows[count+1] //по номеру индекса получает строку
@@ -102,19 +102,19 @@ class TimeActivity : AppCompatActivity() {
                     val Time_List = str1.split("|")
                     for (i in 0 until Time_List.size){
                         val str2 = Time_List[i]
-                        View.listTime.add(Time(str2))
+                        listTime.add(Time(str2))
                     }
 
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-            return View.listTime
+            return listTime
         }
 
 
         override fun onPostExecute(result: MutableList<Time>) {
             //if you had a ui element, you could display the title
-            View.adapter.set(result)
+            adapter.set(result)
             progres.visibility = View.GONE
         }
     }
@@ -122,11 +122,11 @@ class TimeActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
                 if (isOnline(context)) {
-                    title = View.TitleBlet
-                    View.adapter = TimeAdapter()
+                    title = TitleBlet
+                    adapter = TimeAdapter()
                     TimeList.layoutManager = LinearLayoutManager(context)
-                    TimeList.adapter = View.adapter
-                    View.listTime.clear()
+                    TimeList.adapter = adapter
+                    listTime.clear()
                     MyTask().execute()
                     Log.e("Internet Access", "Online Connect Intenet ")
                 } else {

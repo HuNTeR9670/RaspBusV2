@@ -1,3 +1,5 @@
+package RaspBusMVP
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -5,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.toxa.raspbus.model.Stop
-import View.TimeActivity
+import RaspBusMVP.View.TimeActivity
 import kotlinx.android.synthetic.main.stop_item.view.*
 import com.toxa.raspbusv2.R
 

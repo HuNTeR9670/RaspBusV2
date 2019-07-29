@@ -13,11 +13,11 @@
             android:roundIcon="@drawable/bus"
             android:supportsRtl="true"
             android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning" tools:targetApi="m">
-        <activity android:name="View.TimeActivity">
+        <activity android:name="RaspBusMVP.View.TimeActivity">
         </activity>
-        <activity android:name="View.StopActivity">
+        <activity android:name="RaspBusMVP.View.StopActivity">
         </activity>
-        <activity android:name="View.MainActivity">
+        <activity android:name="RaspBusMVP.View.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

@@ -1,12 +1,14 @@
+package RaspBusMVP
+
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import View.StopActivity
+import RaspBusMVP.View.StopActivity
 import com.toxa.raspbusv2.R
 import kotlinx.android.synthetic.main.route_item.view.*
-import model.Route
+import RaspBusMVP.model.Route
 
 class route_Adapter: RecyclerView.Adapter<routeHolder>() {
     private val listRoute = mutableListOf<Route>()
