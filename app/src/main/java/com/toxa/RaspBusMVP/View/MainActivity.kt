@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
                 if (isOnline(context)) { // если есть интернет соединение
-                    title = "Расписаниерр" // изменить заголовок
+                    title = "Расписание" // изменить заголовок
                     MainPresenter().execute() // открытие потока заполнения данными
                     adapterRoute = route_Adapter() // установка адаптера списка
                     Route_list.layoutManager = LinearLayoutManager(context)
