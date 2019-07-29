@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.toxa.raspbusv2">
+          xmlns:tools="http://schemas.android.com/tools" package="com.toxa.RaspBusMVP">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,11 +13,11 @@
             android:roundIcon="@drawable/bus"
             android:supportsRtl="true"
             android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning" tools:targetApi="m">
-        <activity android:name="RaspBusMVP.View.TimeActivity" tools:ignore="InnerclassSeparator">
+        <activity android:name=".View.TimeActivity">
         </activity>
-        <activity android:name="RaspBusMVP.View.StopActivity" tools:ignore="InnerclassSeparator">
+        <activity android:name=".View.StopActivity">
         </activity>
-        <activity android:name="RaspBusMVP.View.MainActivity" tools:ignore="InnerclassSeparator">
+        <activity android:name=".View.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
