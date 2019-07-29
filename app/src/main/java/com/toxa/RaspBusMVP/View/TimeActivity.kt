@@ -14,6 +14,8 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.toxa.RaspBusMVP.Presenter.TimePresenter
+import com.toxa.RaspBusMVP.Presenter.adapterTime
 import com.toxa.RaspBusMVP.R
 import com.toxa.RaspBusMVP.model.Time
 import kotlinx.android.synthetic.main.activity_time.*
@@ -23,27 +25,7 @@ import java.io.IOException
 import java.util.*
 
 
-private val listTime = mutableListOf<Time>()
-private lateinit var adapter: TimeAdapter
 
-private var Url = arrayOf("http://ap2polotsk.of.by/ap2/rasp/gorod/m-1/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-2/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-2a/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-3/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-4/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-4a/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-6/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-7/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-8/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-9/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-11/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-13/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-23/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-24/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-26/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-27/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-28-00/",
-    "http://ap2polotsk.of.by/ap2/rasp/gorod/m-28/")
 
 private var TitleBlet = ""
 
@@ -76,58 +58,16 @@ class TimeActivity : AppCompatActivity() {
         return true
     }
 
-    @SuppressLint("StaticFieldLeak")
-    inner class MyTask : AsyncTask<Void, Void, MutableList<Time>>() {
-
-        override fun doInBackground(vararg params: Void): MutableList<Time> {
-            val doc: Document
-            var tb = 0
-            val yourDate = Calendar.getInstance().time
-            val c = Calendar.getInstance()
-            c.time = yourDate
-
-            val dayOfWeek = c[Calendar.DAY_OF_WEEK]
-            if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
-                tb = 1
-            }
-            val count = intent.getIntExtra(pos,0)
-            val count1 = intent.getIntExtra(pos2,0)
-            try {
-                doc = Jsoup.connect(Url[count1]).get()
-                val table = doc.select("table")[tb]
-                val rows = table.select("tr")
-                    val row = rows[count+1] //по номеру индекса получает строку
-                    val cols = row.select("td")// разбиваем полученную строку по тегу  на столбы
-                    val str1 = cols[1].text()
-                    val Time_List = str1.split("|")
-                    for (i in 0 until Time_List.size){
-                        val str2 = Time_List[i]
-                        listTime.add(Time(str2))
-                    }
-
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-            return listTime
-        }
-
-
-        override fun onPostExecute(result: MutableList<Time>) {
-            //if you had a ui element, you could display the title
-            adapter.set(result)
-            progres.visibility = View.GONE
-        }
-    }
     inner class NetworkChangeReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
                 if (isOnline(context)) {
                     title = TitleBlet
-                    adapter = TimeAdapter()
+                    adapterTime = TimeAdapter()
                     TimeList.layoutManager = LinearLayoutManager(context)
-                    TimeList.adapter = adapter
-                    listTime.clear()
-                    MyTask().execute()
+                    TimeList.adapter = adapterTime
+                    TimePresenter().execute()
+                    progres.visibility = View.GONE
                     Log.e("Internet Access", "Online Connect Intenet ")
                 } else {
                     title = "Ожидание сети..."

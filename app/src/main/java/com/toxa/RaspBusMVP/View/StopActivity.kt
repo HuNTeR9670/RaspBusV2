@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
+import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_stop.*
 import android.view.View
+import com.toxa.RaspBusMVP.Presenter.listStop
 import com.toxa.RaspBusMVP.R
 
 
@@ -62,11 +64,11 @@ class StopActivity : AppCompatActivity() {
                     adapterStop = StopAdapter()
                     Stop_List.layoutManager = LinearLayoutManager(context)
                     Stop_List.adapter = adapterStop
-                    progres.visibility = View.GONE
-                    if (adapterStop.itemCount==0){ // если выходной день и список пустой
-                        eror.visibility = View.VISIBLE}
-                    if (adapterStop.itemCount==0 && !isOnline(context)){
-                        eror.visibility = View.GONE}
+                    progres.visibility = View.GONE //убираем прогресс бар
+//                    if (listStop.size==0){
+//                        eror.visibility = View.VISIBLE}
+//                    if (listStop.size!=0 && isOnline(context)){
+//                        eror.visibility = View.GONE}
                     Log.e("Check", "Online Connect Internet ")
                 } else {
                     title = "Ожидание сети..."
@@ -82,7 +84,7 @@ class StopActivity : AppCompatActivity() {
             return try {
                 val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
                 val netInfo = cm.activeNetworkInfo
-                //should check null because in airplane mode it will be null
+                //проверка на включенность режима "в полёте"
                 netInfo != null && netInfo.isConnected
             } catch (e: NullPointerException) {
                 e.printStackTrace()

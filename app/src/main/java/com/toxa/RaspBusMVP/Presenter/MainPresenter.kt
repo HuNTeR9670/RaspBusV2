@@ -4,6 +4,8 @@ import com.toxa.RaspBusMVP.model.Route
 import com.toxa.RaspBusMVP.route_Adapter
 import android.annotation.SuppressLint
 import android.os.AsyncTask
+import android.view.View
+import kotlinx.android.synthetic.main.activity_main.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.io.IOException

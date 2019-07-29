@@ -27,7 +27,7 @@ class route_Adapter: RecyclerView.Adapter<routeHolder>() {
             val intent = Intent(context, StopActivity::class.java)
             intent.putExtra(StopActivity.pos, holder.adapterPosition)
             intent.putExtra(StopActivity.PrevTitle, holder.itemView.Route_Name.text)
-            pos =position
+            pos = position
             it.context.startActivity(intent)
         }
     }
