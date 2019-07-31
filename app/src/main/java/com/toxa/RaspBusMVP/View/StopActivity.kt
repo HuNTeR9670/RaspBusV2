@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_stop.*
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.isEmpty
+import androidx.core.view.isNotEmpty
 import com.toxa.RaspBusMVP.Presenter.listStop
 import com.toxa.RaspBusMVP.R
 
