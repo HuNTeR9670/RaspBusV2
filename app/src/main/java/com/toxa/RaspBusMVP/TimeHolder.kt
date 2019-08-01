@@ -8,6 +8,6 @@ import kotlinx.android.synthetic.main.time_item.view.*
 class TimeHolder (itemView: View) : RecyclerView.ViewHolder(itemView){
 
        fun bind(time: Time) {
-        itemView.curr_time.text = time.time
+        itemView.curr_time.text = time.time // привязка информации о времени к TextView
     }
 }
