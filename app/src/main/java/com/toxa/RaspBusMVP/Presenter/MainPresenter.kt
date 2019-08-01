@@ -31,7 +31,7 @@ class MainPresenter : AsyncTask<Void, Void, MutableList<Route>>() { // пото�
             doc = Jsoup.connect("http://ap2polotsk.of.by/ap2/rasp/gorod/").get() // получение страницы
             val png = doc.select("img[src$=.png]") // выделение из страницы картинок
             for (i in 0 until png.size ){ // пока не будет достингнут конец списка картинок
-                listImage.add(  // добавлене ссылок на картинки
+                listImage.add(  // добавлене в список ссылок на картинки
                     Route(
                         array[i],
                         png.eq(i).attr("src")

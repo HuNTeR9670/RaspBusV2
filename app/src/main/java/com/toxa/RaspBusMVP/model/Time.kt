@@ -1,5 +1,5 @@
 package com.toxa.RaspBusMVP.model
 
 class Time(
-    val time : String
+    val time : String //время прибытия автобуса
 )

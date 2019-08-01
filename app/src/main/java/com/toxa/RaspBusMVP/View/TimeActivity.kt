@@ -32,8 +32,8 @@ class TimeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_time)
         val filter = IntentFilter()
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
-        registerReceiver(NetworkChangeReceiver(), filter)
-        val actionBar = supportActionBar
+        registerReceiver(NetworkChangeReceiver(), filter) // регистрируем класс проверки состояния сети
+        val actionBar = supportActionBar // добавляем кнопку "назад"
         actionBar!!.setHomeButtonEnabled(true)
         actionBar.setDisplayHomeAsUpEnabled(true)
         title = intent.getStringExtra(TitleStop)
@@ -71,7 +71,7 @@ class TimeActivity : AppCompatActivity() {
             return try {
                 val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
                 val netInfo = cm.activeNetworkInfo
-                //should check null because in airplane mode it will be null
+                //проверка на включённость режима "в полёте"
                 netInfo != null && netInfo.isConnected
             } catch (e: NullPointerException) {
                 e.printStackTrace()

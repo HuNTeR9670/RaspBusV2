@@ -16,12 +16,6 @@
             android:usesCleartextTraffic="true"
             tools:ignore="GoogleAppIndexingWarning"
             tools:targetApi="m">
-        <receiver
-                android:name=".NetworkChangeReceiver"
-                android:enabled="true"
-                android:exported="true">
-        </receiver>
-
         <activity android:name=".View.TimeActivity">
         </activity>
         <activity android:name=".View.StopActivity">

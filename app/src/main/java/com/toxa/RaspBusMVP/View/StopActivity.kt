@@ -29,7 +29,6 @@ private var TitleStop= ""
 class StopActivity : AppCompatActivity() {
 
     companion object {
-        const val pos = "total_count"
         const val PrevTitle = "title"
     }
 
@@ -38,13 +37,15 @@ class StopActivity : AppCompatActivity() {
         setContentView(R.layout.activity_stop)
         title = intent.getStringExtra(PrevTitle) // получаем наименование маршрута и устанавливает в качестве заголовка
         TitleStop = intent.getStringExtra(PrevTitle) // получаем наименование маршрута
+        StopPresenter().execute()
         val filter = IntentFilter()
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
         registerReceiver(NetworkChangeReceiver(), filter) //регистрация класса проверки состояния сети
         val actionBar = supportActionBar // добавляем кнопку "Назад"
         actionBar!!.setHomeButtonEnabled(true)
         actionBar.setDisplayHomeAsUpEnabled(true)
-            }
+        if (!StopPresenter.empty){Toast.makeText(this@StopActivity, "blet",Toast.LENGTH_SHORT).show()}
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean { // обработка нажатия кнопки "Назад"
         this.finish()
@@ -58,7 +59,6 @@ class StopActivity : AppCompatActivity() {
             try {
                 if (isOnline(context)) { // если есть интернет соединение
                     title = TitleStop
-                    StopPresenter().execute()
                     adapterStop = StopAdapter()
                     Stop_List.layoutManager = LinearLayoutManager(context)
                     Stop_List.adapter = adapterStop

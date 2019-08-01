@@ -6,11 +6,10 @@ import com.toxa.RaspBusMVP.model.Stop
 import kotlinx.android.synthetic.main.stop_item.view.*
 
 
-class StopView(itemView: View) : RecyclerView.ViewHolder(itemView){
+class StopHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
     fun bind(stop: Stop) {
-        itemView.name_stop.text = stop.stop_name
-
+        itemView.name_stop.text = stop.stop_name // привязка наименования остановки к TextView
         }
 
     }

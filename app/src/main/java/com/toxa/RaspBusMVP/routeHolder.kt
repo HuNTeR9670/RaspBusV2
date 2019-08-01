@@ -8,8 +8,8 @@ import com.toxa.RaspBusMVP.model.Route
 
 class routeHolder (itemView: View) : RecyclerView.ViewHolder(itemView){
     fun bind(route: Route) {
-        itemView.Route_Name.text = route.route_name
-        Picasso.get().load(route.img).into(itemView.image_view)
+        itemView.Route_Name.text = route.route_name // привязка информации о наименование к TextView
+        Picasso.get().load(route.img).into(itemView.image_view) // получение изображения и првязка его в ImageView
     }
 
 }

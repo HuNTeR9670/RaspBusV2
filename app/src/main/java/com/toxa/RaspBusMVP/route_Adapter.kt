@@ -9,35 +9,36 @@ import com.toxa.RaspBusMVP.View.StopActivity
 import kotlinx.android.synthetic.main.route_item.view.*
 import com.toxa.RaspBusMVP.model.Route
 
-class route_Adapter: RecyclerView.Adapter<routeHolder>() {
-    private val listRoute = mutableListOf<Route>()
+class route_Adapter: RecyclerView.Adapter<routeHolder>() { // адаптер списка маршрутов
+    private val listRoute = mutableListOf<Route>() // объявление списка маршрутов
+
     companion object {
-        var pos= 0
+        var pos = 0   //объявление вспомогательного объекта
     }
-    private var context: Context? = null
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): routeHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.route_item,parent,false)
-        return routeHolder(view)
+
+    private var context: Context? = null //объявление контекста
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): routeHolder { // метод создания ViewHolder
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.route_item,parent,false) // указываем макет для каждого элемента RecyclerView
+        return routeHolder(view) // передача макета ViewHolder
     }
 
     override fun onBindViewHolder(holder: routeHolder, position: Int) {
-        holder.bind(listRoute[position])
-        holder.itemView.card_view.setOnClickListener{
+        holder.bind(listRoute[position]) //привязка данных к объекту
+        holder.itemView.card_view.setOnClickListener{ // обработка нажатия на элемент
             context = it.context
             val intent = Intent(context, StopActivity::class.java)
-            intent.putExtra(StopActivity.pos, holder.adapterPosition)
-            intent.putExtra(StopActivity.PrevTitle, holder.itemView.Route_Name.text)
-            pos = position
-            it.context.startActivity(intent)
+            intent.putExtra(StopActivity.PrevTitle, holder.itemView.Route_Name.text) // передача наименования маршрута
+            pos = position // передача текущей позиции
+            it.context.startActivity(intent) // старт нового Activity
         }
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = listRoute.size
+    override fun getItemCount() = listRoute.size //метод возвращает количество элементов в списке
 
-    fun set(list: MutableList<Route>){
-        this.listRoute.clear()
-        this.listRoute.addAll(list)
-        notifyDataSetChanged()
+    fun set(list: MutableList<Route>){ // метод добавление элементов в список
+        this.listRoute.clear() // очистка списка
+        this.listRoute.addAll(list) // добавление элементов в список
+        notifyDataSetChanged() //обновление изменений
     }
 }

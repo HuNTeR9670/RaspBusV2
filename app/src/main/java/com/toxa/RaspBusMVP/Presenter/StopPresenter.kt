@@ -2,10 +2,9 @@ package com.toxa.RaspBusMVP.Presenter
 
 import com.toxa.RaspBusMVP.StopAdapter
 import android.os.AsyncTask
-import android.view.View
+import android.widget.Toast
 import com.toxa.RaspBusMVP.model.Stop
 import com.toxa.RaspBusMVP.route_Adapter
-import kotlinx.android.synthetic.main.activity_stop.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.io.IOException
@@ -13,6 +12,7 @@ import java.util.*
 
 
 val listStop = mutableListOf<Stop>()
+
 lateinit var adapterStop: StopAdapter
 
 private var Url = arrayOf("http://ap2polotsk.of.by/ap2/rasp/gorod/m-1/",
@@ -36,33 +36,37 @@ private var Url = arrayOf("http://ap2polotsk.of.by/ap2/rasp/gorod/m-1/",
 
 class StopPresenter : AsyncTask<Void, Void, MutableList<Stop>>() { // поток парсинга страницы и получения данных в адаптер
 
+    companion object{
+        var empty : Boolean = false
+    }
+
     override fun doInBackground(vararg params: Void): MutableList<Stop> {
         val doc: Document
         var flag = 0
-        val yourDate = Calendar.getInstance().time
-        val c = Calendar.getInstance() // получение текущего времени
+        val yourDate = Calendar.getInstance().time // получение текущего времени
+        val c = Calendar.getInstance()
         c.time = yourDate
         val dayOfWeek = c[Calendar.DAY_OF_WEEK]
         if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) { // если выходной то
             flag = 1 // присваиваем флагу 1
         }
-        val pos = route_Adapter.pos
+        val pos = route_Adapter.pos // получение позиции
         try {
-            listStop.clear()
+            listStop.clear() //очищаем список
             doc = Jsoup.connect(Url[pos]).get() // по полученой позиции получаем URL парсим страницу
             val table = doc.select("table")[flag] // получаем таблицу в случае если выходной то таблица №2
-            val rows = table.select("tr") // получаем строки таблицы
+            val rows = table.select("tr") // получаем столбцы таблицы
             val j: Int
-            j = if (pos==3 && flag!=1){
+            j = if (pos==3 && flag!=1){ // если выбран маршрут №3 парсим только 2 таблицы
                 3
             } else {
                 rows.size
             }
-            for (i in 1 until j) {
+            for (i in 1 until j) { // цикл пока не будет достигнут конец строк
                 val row = rows[i] //по номеру индекса получает строку
                 val cols = row.select("td")// разбиваем полученную строку по тегу  на столбы
                 val str1 = cols[0].text()  // получаем названия остановок
-                if (str1=="—"){}else // если таблица не имеет ничего добавляем "Выходной день!"
+                if (str1=="—"){ }else // если таблица не имеет ничего добавляем "Выходной день!"
                     listStop.add(Stop(str1))
             }
         } catch (e: IOException) {
@@ -74,6 +78,7 @@ class StopPresenter : AsyncTask<Void, Void, MutableList<Stop>>() { // поток
 
     override fun onPostExecute(result: MutableList<Stop>) {
         //записываем данные в адаптер
+        empty = result.size==0
         adapterStop.set(result)
     }
 }
