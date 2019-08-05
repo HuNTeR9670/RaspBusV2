@@ -1,8 +1,6 @@
 package com.toxa.RaspBusMVP.View
 
 import android.annotation.SuppressLint
-import com.toxa.RaspBusMVP.Presenter.StopPresenter
-import com.toxa.RaspBusMVP.Presenter.adapterStop
 import com.toxa.RaspBusMVP.StopAdapter
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -20,8 +18,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.view.isEmpty
 import androidx.core.view.isNotEmpty
-import com.toxa.RaspBusMVP.Presenter.empty
-import com.toxa.RaspBusMVP.Presenter.listStop
+import com.toxa.RaspBusMVP.Presenter.*
 import com.toxa.RaspBusMVP.R
 
 
@@ -38,9 +35,6 @@ class StopActivity : AppCompatActivity() {
         setContentView(R.layout.activity_stop)
         title = intent.getStringExtra(PrevTitle) // получаем наименование маршрута и устанавливает в качестве заголовка
         TitleStop = intent.getStringExtra(PrevTitle) // получаем наименование маршрута
-        val filter = IntentFilter()
-        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
-        registerReceiver(NetworkChangeReceiver(), filter) //регистрация класса проверки состояния сети
         val actionBar = supportActionBar // добавляем кнопку "Назад"
         actionBar!!.setHomeButtonEnabled(true)
         actionBar.setDisplayHomeAsUpEnabled(true)
@@ -52,6 +46,17 @@ class StopActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onStart() {
+        val filter = IntentFilter()
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
+        registerReceiver(NetworkChangeReceiver(), filter) //регистрация класса проверки состояния сети
+        super.onStart()
+    }
+    override fun onDestroy() {
+        StopPresenter().cancel(true)
+        NetworkChangeReceiver().abortBroadcast
+        super.onDestroy()
+    }
 
 
 

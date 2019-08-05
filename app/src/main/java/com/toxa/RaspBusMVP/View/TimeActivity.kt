@@ -30,9 +30,6 @@ class TimeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_time)
-        val filter = IntentFilter()
-        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
-        registerReceiver(NetworkChangeReceiver(), filter) // регистрируем класс проверки состояния сети
         val actionBar = supportActionBar // добавляем кнопку "назад"
         actionBar!!.setHomeButtonEnabled(true)
         actionBar.setDisplayHomeAsUpEnabled(true)
@@ -44,6 +41,18 @@ class TimeActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         this.finish()
         return true
+    }
+
+    override fun onStart() {
+        val filter = IntentFilter()
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
+        registerReceiver(NetworkChangeReceiver(), filter) //регистрация класса проверки состояния сети
+        super.onStart()
+    }
+    override fun onDestroy() {
+        TimePresenter().cancel(true)
+        NetworkChangeReceiver().abortBroadcast
+        super.onDestroy()
     }
 
     inner class NetworkChangeReceiver : BroadcastReceiver() {

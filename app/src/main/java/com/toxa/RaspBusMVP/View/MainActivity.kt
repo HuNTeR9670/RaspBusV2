@@ -21,12 +21,22 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+    }
+
+    override fun onStart() {
         val filter = IntentFilter()
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
         registerReceiver(NetworkChangeReceiver(), filter) //регистрация класса проверки состояния сети
+        super.onStart()
+    }
+    override fun onDestroy() {
+        MainPresenter().cancel(true)
+        NetworkChangeReceiver().abortBroadcast
+        super.onDestroy()
     }
 
-    inner class NetworkChangeReceiver : BroadcastReceiver() {
+
+     inner class NetworkChangeReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
                 if (isOnline(context)) { // если есть интернет соединение
