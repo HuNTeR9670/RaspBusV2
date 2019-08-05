@@ -50,8 +50,8 @@ class TimeActivity : AppCompatActivity() {
         super.onStart()
     }
     override fun onDestroy() {
-        TimePresenter().cancel(true)
-        NetworkChangeReceiver().abortBroadcast
+        TimePresenter().cancel(true) // завершение асинхронной задачи
+        NetworkChangeReceiver().abortBroadcast // остановка вещателя
         super.onDestroy()
     }
 

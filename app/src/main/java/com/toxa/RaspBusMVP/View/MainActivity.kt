@@ -30,8 +30,8 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
     }
     override fun onDestroy() {
-        MainPresenter().cancel(true)
-        NetworkChangeReceiver().abortBroadcast
+        MainPresenter().cancel(true) // завершение асинхронной задачи
+        NetworkChangeReceiver().abortBroadcast // остановка вещателя
         super.onDestroy()
     }
 

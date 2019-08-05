@@ -53,8 +53,8 @@ class StopActivity : AppCompatActivity() {
         super.onStart()
     }
     override fun onDestroy() {
-        StopPresenter().cancel(true)
-        NetworkChangeReceiver().abortBroadcast
+        StopPresenter().cancel(true) // завершение асинхронной задачи
+        NetworkChangeReceiver().abortBroadcast // остановка вещателя
         super.onDestroy()
     }
 
