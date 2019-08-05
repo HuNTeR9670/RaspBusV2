@@ -20,6 +20,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.view.isEmpty
 import androidx.core.view.isNotEmpty
+import com.toxa.RaspBusMVP.Presenter.empty
 import com.toxa.RaspBusMVP.Presenter.listStop
 import com.toxa.RaspBusMVP.R
 
@@ -37,14 +38,13 @@ class StopActivity : AppCompatActivity() {
         setContentView(R.layout.activity_stop)
         title = intent.getStringExtra(PrevTitle) // получаем наименование маршрута и устанавливает в качестве заголовка
         TitleStop = intent.getStringExtra(PrevTitle) // получаем наименование маршрута
-        StopPresenter().execute()
         val filter = IntentFilter()
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
         registerReceiver(NetworkChangeReceiver(), filter) //регистрация класса проверки состояния сети
         val actionBar = supportActionBar // добавляем кнопку "Назад"
         actionBar!!.setHomeButtonEnabled(true)
         actionBar.setDisplayHomeAsUpEnabled(true)
-        if (!StopPresenter.empty){Toast.makeText(this@StopActivity, "blet",Toast.LENGTH_SHORT).show()}
+        if (empty==1){Toast.makeText(this@StopActivity, "blet",Toast.LENGTH_SHORT).show()}
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean { // обработка нажатия кнопки "Назад"
@@ -54,15 +54,18 @@ class StopActivity : AppCompatActivity() {
 
 
 
+
     inner class NetworkChangeReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
                 if (isOnline(context)) { // если есть интернет соединение
                     title = TitleStop
                     adapterStop = StopAdapter()
+                    StopPresenter().execute()
                     Stop_List.layoutManager = LinearLayoutManager(context)
                     Stop_List.adapter = adapterStop
                     pro.visibility = View.GONE //убираем прогресс бар
+                    StopPresenter().cancel(true)
                     Log.e("Check", "Online Connect Internet ")
                 } else {
                     title = "Ожидание сети..."

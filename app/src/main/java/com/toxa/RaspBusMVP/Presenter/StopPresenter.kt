@@ -1,5 +1,6 @@
 package com.toxa.RaspBusMVP.Presenter
 
+import android.annotation.SuppressLint
 import com.toxa.RaspBusMVP.StopAdapter
 import android.os.AsyncTask
 import android.widget.Toast
@@ -12,7 +13,8 @@ import java.util.*
 
 
 val listStop = mutableListOf<Stop>()
-
+var empty : Int = 0
+@SuppressLint("StaticFieldLeak")
 lateinit var adapterStop: StopAdapter
 
 private var Url = arrayOf("http://ap2polotsk.of.by/ap2/rasp/gorod/m-1/",
@@ -36,9 +38,6 @@ private var Url = arrayOf("http://ap2polotsk.of.by/ap2/rasp/gorod/m-1/",
 
 class StopPresenter : AsyncTask<Void, Void, MutableList<Stop>>() { // поток парсинга страницы и получения данных в адаптер
 
-    companion object{
-        var empty : Boolean = false
-    }
 
     override fun doInBackground(vararg params: Void): MutableList<Stop> {
         val doc: Document
@@ -66,7 +65,8 @@ class StopPresenter : AsyncTask<Void, Void, MutableList<Stop>>() { // поток
                 val row = rows[i] //по номеру индекса получает строку
                 val cols = row.select("td")// разбиваем полученную строку по тегу  на столбы
                 val str1 = cols[0].text()  // получаем названия остановок
-                if (str1=="—"){ }else // если таблица не имеет ничего добавляем "Выходной день!"
+                if (str1=="—")
+                {empty=1}else // если таблица пуста то ничего не добавляем в список
                     listStop.add(Stop(str1))
             }
         } catch (e: IOException) {
@@ -75,10 +75,8 @@ class StopPresenter : AsyncTask<Void, Void, MutableList<Stop>>() { // поток
         return listStop // передача списка остановок
     }
 
-
     override fun onPostExecute(result: MutableList<Stop>) {
         //записываем данные в адаптер
-        empty = result.size==0
         adapterStop.set(result)
     }
 }
