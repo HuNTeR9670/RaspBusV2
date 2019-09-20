@@ -49,5 +49,5 @@ class MainPresenter : AsyncTask<Void, Void, MutableList<Route>>() { // пото�
     override fun onPostExecute(result: MutableList<Route>) {
         //установка адаптера списка
         adapterRoute.set(result)
-    }
+        }
 }

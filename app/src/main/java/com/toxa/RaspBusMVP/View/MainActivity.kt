@@ -11,6 +11,7 @@ import android.util.Log
 import android.content.IntentFilter
 import android.content.Intent
 import android.content.BroadcastReceiver
+import android.os.AsyncTask
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.toxa.RaspBusMVP.R
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
     }
     override fun onDestroy() {
-        MainPresenter().cancel(true) // завершение асинхронной задачи
+        MainPresenter().cancel(false) // завершение асинхронной задачи
         NetworkChangeReceiver().abortBroadcast // остановка вещателя
         super.onDestroy()
     }
@@ -40,12 +41,12 @@ class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
                 if (isOnline(context)) { // если есть интернет соединение
+                    pro.visibility = View.GONE // убираем прогрес бар
                     title = "Расписание" // изменить заголовок
                     MainPresenter().execute() // открытие потока заполнения данными
                     adapterRoute = route_Adapter() // установка адаптера списка
-                    Route_list.layoutManager = LinearLayoutManager(context)
+                    Route_list.layoutManager = LinearLayoutManager(context) // назначаем разметку
                     Route_list.adapter = adapterRoute // передача адаптера списка
-                    pro.visibility = View.GONE // убираем прогресс бар
                     Log.e("Check", "Online Connect Internet ")  // пишем в логи присутсвие интернета
                 } else { // если нет интернет соединения
                     title = "Ожидание сети..." // изменить заголовок
@@ -61,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             return try {
                 val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
                 val netInfo = cm.activeNetworkInfo
-                //should check null because in airplane mode it will be null
+                //проверка на включёность режима "в полёте"
                 netInfo != null && netInfo.isConnected
             } catch (e: NullPointerException) {
                 e.printStackTrace()

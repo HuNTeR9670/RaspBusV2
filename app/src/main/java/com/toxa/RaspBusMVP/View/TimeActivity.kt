@@ -33,13 +33,13 @@ class TimeActivity : AppCompatActivity() {
         val actionBar = supportActionBar // добавляем кнопку "назад"
         actionBar!!.setHomeButtonEnabled(true)
         actionBar.setDisplayHomeAsUpEnabled(true)
-        title = intent.getStringExtra(TitleStop)
-        TitleTime = intent.getStringExtra(TitleStop)
+        title = intent.getStringExtra(TitleStop) // получаем наименование остановки и устанавливает в качестве заголовка
+        TitleTime = intent.getStringExtra(TitleStop) // получаем наименование остановки и устанавливает в качестве заголовка
 
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        this.finish()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean { // обработка нажатия кнопки "Назад"
+        this.finish() // завершаем текущее активити
         return true
     }
 
@@ -50,7 +50,7 @@ class TimeActivity : AppCompatActivity() {
         super.onStart()
     }
     override fun onDestroy() {
-        TimePresenter().cancel(true) // завершение асинхронной задачи
+        TimePresenter().cancel(false) // завершение асинхронной задачи
         NetworkChangeReceiver().abortBroadcast // остановка вещателя
         super.onDestroy()
     }
@@ -58,17 +58,17 @@ class TimeActivity : AppCompatActivity() {
     inner class NetworkChangeReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
-                if (isOnline(context)) {
-                    title = TitleTime
-                    adapterTime = TimeAdapter()
-                    TimeList.layoutManager = LinearLayoutManager(context)
-                    TimeList.adapter = adapterTime
-                    TimePresenter().execute()
-                    pro.visibility = View.GONE
-                    Log.e("Internet Access", "Online Connect Intenet ")
-                } else {
-                    title = "Ожидание сети..."
-                    Log.e("Internet Access", "Conectivity Failure !!! ")
+                if (isOnline(context)) { //если есть интернет соеденение
+                    title = TitleTime // меняем заголовок
+                    adapterTime = TimeAdapter() // устанавливаем адаптер
+                    TimeList.layoutManager = LinearLayoutManager(context) // назначаем разметку
+                    TimeList.adapter = adapterTime // передача адаптера списка
+                    TimePresenter().execute() // открытие потока заполнения данными
+                    pro.visibility = View.GONE //убираем прогресс бар
+                    Log.e("Internet Access", "Online Connect Internet ") // пишем в логи присутсвие интернета
+                } else { // если нет интернет соеденения
+                    title = "Ожидание сети..." // меняем заголовок
+                    Log.e("Check", "No Online Connect !!! ")// пишем в логи отсутсвие интернета
                 }
             } catch (e: NullPointerException) {
                 e.printStackTrace()
@@ -76,7 +76,7 @@ class TimeActivity : AppCompatActivity() {
 
         }
 
-        private fun isOnline(context: Context): Boolean {
+        private fun isOnline(context: Context): Boolean { // проверка состояния сети
             return try {
                 val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
                 val netInfo = cm.activeNetworkInfo

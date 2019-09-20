@@ -38,11 +38,10 @@ class StopActivity : AppCompatActivity() {
         val actionBar = supportActionBar // добавляем кнопку "Назад"
         actionBar!!.setHomeButtonEnabled(true)
         actionBar.setDisplayHomeAsUpEnabled(true)
-        if (empty==1){Toast.makeText(this@StopActivity, "blet",Toast.LENGTH_SHORT).show()}
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean { // обработка нажатия кнопки "Назад"
-        this.finish()
+        this.finish() // завершаем текущее активити
         return true
     }
 
@@ -53,7 +52,7 @@ class StopActivity : AppCompatActivity() {
         super.onStart()
     }
     override fun onDestroy() {
-        StopPresenter().cancel(true) // завершение асинхронной задачи
+        StopPresenter().cancel(false) // завершение асинхронной задачи
         NetworkChangeReceiver().abortBroadcast // остановка вещателя
         super.onDestroy()
     }
@@ -64,17 +63,16 @@ class StopActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
                 if (isOnline(context)) { // если есть интернет соединение
-                    title = TitleStop
-                    adapterStop = StopAdapter()
-                    StopPresenter().execute()
-                    Stop_List.layoutManager = LinearLayoutManager(context)
-                    Stop_List.adapter = adapterStop
+                    title = TitleStop //меняем заголовок
+                    adapterStop = StopAdapter() // устанавливаем адаптер
+                    StopPresenter().execute() // открытие потока заполнения данными
+                    Stop_List.layoutManager = LinearLayoutManager(context) // назначем разметку
+                    Stop_List.adapter = adapterStop // передача адаптера списка
                     pro.visibility = View.GONE //убираем прогресс бар
-                    StopPresenter().cancel(true)
-                    Log.e("Check", "Online Connect Internet ")
-                } else {
-                    title = "Ожидание сети..."
-                    Log.e("Check", "No Online Connect !!! ")
+                    Log.e("Check", "Online Connect Internet ") // пишем в логи присутсвие интернета
+                } else { // если нет интернет соеденения
+                    title = "Ожидание сети..." // меняем заголовок
+                    Log.e("Check", "No Online Connect !!! ")// пишем в логи отсутсвие интернета
                 }
             } catch (e: NullPointerException) {
                 e.printStackTrace()
@@ -82,7 +80,7 @@ class StopActivity : AppCompatActivity() {
 
         }
 
-        private fun isOnline(context: Context): Boolean {
+        private fun isOnline(context: Context): Boolean { // проверка состояния сети
             return try {
                 val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
                 val netInfo = cm.activeNetworkInfo
